@@ -72,7 +72,7 @@ const initalContacts = [
     >
       <h1>Phonebook</h1>
       <ContactForm handleSubmit={handleSubmit} />
-      <h2> Contacts</h2>
+      <h2> Contacts - test</h2>
       <Filter filter={filter} handleChange={handleChangeFilter} />
       <ContactList
         contacts={getFilteredContacts()}
