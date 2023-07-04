@@ -1,36 +1,39 @@
 import React from 'react';
-import { nanoid } from 'nanoid';
+// import { nanoid } from 'nanoid';
 import { ContactForm } from './ContactForm/ContactForm';
 import { Filter } from './Filter/Filter';
 import { ContactList } from './ContactList/ContactList';
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
+import { getContacts, getFilter } from './redux/selectors';
+import { useDispatch } from 'react-redux';
+import { addContact, delContact } from './redux/actions';
+import { useSelector } from 'react-redux';
 
 export const App = () => {
-const initalContacts = [
-      { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
-      { id: 'id-2', name: 'Hermione Kline', number: '443-89-12' },
-      { id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
-      { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
-    ]
+  const contacts = useSelector(getContacts);
+  const filter = useSelector(getFilter);
 
-  const [contacts, setContacts] = useState(
-    JSON.parse(localStorage.getItem('contacts')) || initalContacts
-  );
+  const dispatch = useDispatch();
 
-  const [filter, setFilter] = useState('');
+
+  // const [contacts, setContacts] = useState(
+  //   JSON.parse(localStorage.getItem('contacts')) || initalContacts
+  // );
+
+  // const [filter, setFilter] = useState('');
 
   useEffect(() => {
     localStorage.setItem('contacts', JSON.stringify(contacts));
     console.log(contacts);
   }, [contacts]);
 
-  const handleChangeFilter = event => {
-    const value = event.target.value;
-    setFilter(value);
-  };
+  // const handleChangeFilter = event => {
+  //   const value = event.target.value;
+  //   setFilter(value);
+  // };
 
   const handleSubmit = e => {
-    const id = nanoid();
+    // const id = nanoid();
     const name = e.name;
     const number = e.number;
     const contactsLists = [...contacts];
@@ -42,13 +45,13 @@ const initalContacts = [
     ) {
       alert(`${name} is already in contacts.`);
     } else {
-      contactsLists.push({ name, id, number });
+      dispatch(addContact(name, number));
     }
-    setContacts(contactsLists);
+ 
   };
 
-  const handleDelete = deleteId => {
-    setContacts(contacts.filter(contact => contact.id !== deleteId));
+  const handleDelete = e => {
+    dispatch(delContact(e));
   };
 
   const getFilteredContacts = () => {
@@ -72,8 +75,8 @@ const initalContacts = [
     >
       <h1>Phonebook</h1>
       <ContactForm handleSubmit={handleSubmit} />
-      <h2> Contacts - test</h2>
-      <Filter filter={filter} handleChange={handleChangeFilter} />
+      <h2> Contacts </h2>
+      <Filter />
       <ContactList
         contacts={getFilteredContacts()}
         handleDelete={handleDelete}
